@@ -29,9 +29,10 @@ export class MessageService {
         return await this.repository.update(id, message);
     }
 
-    async createAnsware(questionid:number,sender:string, answer:string): Promise<Message>{
+    async createAnsware(messageid:number,sender:string, answer:string): Promise<any>{
         const newmessage: Message = await this.createMessage(sender, answer);
-        newmessage.questionid = questionid;
-        return newmessage;
+        const message: Message = await this.findOne(messageid);
+        message.answer = newmessage;
+        return await this.repository.update(messageid,message);
     }
 }

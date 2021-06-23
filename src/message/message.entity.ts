@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { type } from "os";
+import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class Message{
@@ -11,8 +12,8 @@ export class Message{
     @Column('varchar')
     message: string;
 
-    @Column()
-    questionid: number;
+    @OneToOne(type => Message) 
+    answer: Message;
 
     @Column('varchar')
     emoji: string;
