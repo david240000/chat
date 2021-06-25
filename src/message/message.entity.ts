@@ -1,5 +1,5 @@
 import { type } from "os";
-import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class Message{
@@ -12,8 +12,11 @@ export class Message{
     @Column('varchar')
     message: string;
 
-    @OneToOne(type => Message) 
-    answer: Message;
+    @ManyToOne(type => Message, message=>message.answers)
+    answaredMessage:Message
+
+    @OneToMany(type => Message, message =>  message.answaredMessage) 
+    answers: Message[];
 
     @Column('varchar')
     emoji: string;

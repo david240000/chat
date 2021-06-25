@@ -9,11 +9,11 @@ export class MessageService {
     constructor(@InjectRepository(Message) private repository: Repository<Message>){}
 
     async findAll(): Promise<Message[]>{
-        return this.repository.find();
+        return this.repository.find({relations: ['ansaredMessage', 'answers']});
     }
 
     async findOne(id: number): Promise<Message>{
-        return this.repository.findOne(id);
+        return this.repository.findOne(id, {relations: ['ansaredMessage', 'answers']});
     }
 
     async createMessage(sender: string, message: string): Promise<Message>{
@@ -32,7 +32,9 @@ export class MessageService {
     async createAnsware(messageid:number,sender:string, answer:string): Promise<any>{
         const newmessage: Message = await this.createMessage(sender, answer);
         const message: Message = await this.findOne(messageid);
-        message.answer = newmessage;
+        message.answers.push(newmessage);
+        newmessage.answaredMessage = message;
+        await this.repository.update(newmessage.id, newmessage);
         return await this.repository.update(messageid,message);
     }
 }
